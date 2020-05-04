@@ -1,0 +1,57 @@
+package backend.dateutils;
+
+import org.joda.time.DateTime;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+public class DateUtil {
+
+    public static String getFutureDateInString(String date, int days) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar cal = Calendar.getInstance();
+        Date yest;
+        try {
+            yest = dateFormat.parse(date);
+            cal.setTime(yest);
+            cal.add(Calendar.DATE, +days);
+            yest = cal.getTime();
+
+        } catch (ParseException e) {
+            return null;
+        }
+        return dateFormat.format(yest);
+    }
+
+    public static String getLastFridayDateInString(String currentDate) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(dateFormat.parse(currentDate));
+
+            int offset = calendar.get(Calendar.FRIDAY);
+            return dateFormat.format(new DateTime(currentDate).minusDays(offset).toDate());
+        } catch (Exception e) {
+            System.out.println("Exception while parsing date " + e.getMessage());
+        }
+        return null;
+    }
+
+    public static String getLastSecondDateOfMonth(String currentDate) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Calendar calendar = Calendar.getInstance();
+            DateTime yesterdayDate = new DateTime(currentDate).minusDays(1);
+            calendar.setTime(yesterdayDate.toDate());
+            int offset = calendar.get(Calendar.DAY_OF_MONTH) - 2;
+            return dateFormat.format(yesterdayDate.minusDays(offset).toDate());
+        } catch (Exception e) {
+            System.out.println("Exception while parsing date " + e.getMessage());
+        }
+        return null;
+    }
+
+}
